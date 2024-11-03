@@ -1,5 +1,5 @@
 /**
- * @file igd_plus.hpp
+ * @file igd.hpp
  * @author Satyam Shukla
  *
  * Inverse Generational Distance Plus (IGD) indicator.
@@ -16,8 +16,10 @@
 namespace ens {
 
 /**
- * The IGD indicator returns the average distance from each point in the reference
- * front to the nearest point to it's solution. 
+ * The inverted generational distance( IGD) is a metric for assessing the quality
+ * of approximations to the Pareto front obtained by multi-objective optimization
+ * algorithms.The IGD indicator returns the average distance from each point in 
+ * the reference front to the nearest point to it's solution. 
  *
  * \f[ d(z,a) = \sqrt{\sum_{i = 1}^{n}(a_i - z_i)^2 \ } \
  *    \f]
@@ -73,7 +75,8 @@ namespace ens {
             ElemType z = referenceFront(k, 0, i);
             ElemType a = front(k, 0, j);
             // Assuming minimization of all objectives.
-            dist += std::pow(a - z, 2);
+            //! IGD does not clip negative differences to 0
+            dist += std::pow(a - z, 2); 
           }
           dist = std::sqrt(dist);
           if (dist < min)

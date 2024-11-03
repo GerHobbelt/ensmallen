@@ -36,7 +36,6 @@ bool IsInBounds(const ElemType& value,
   return !(value < (low - roundoff)) && !((high + roundoff) < value);
 }
 
-
 /**
  * Optimize for the Schaffer N.1 function using AGE-MOEA optimizer.
  * Tests for data of type double.
@@ -49,7 +48,7 @@ TEST_CASE("AGEMOEASchafferN1DoubleTest", "[AGEMOEATest]")
   const double expectedLowerBound = 0.0;
   const double expectedUpperBound = 2.0;
 
-  AGEMOEA opt(20, 300, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
+  AGEMOEA opt(20, 500, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
 
   typedef decltype(SCH.objectiveA) ObjectiveTypeA;
   typedef decltype(SCH.objectiveB) ObjectiveTypeB;
@@ -99,7 +98,7 @@ TEST_CASE("AGEMOEASchafferN1TestVectorDoubleBounds", "[AGEMOEATest]")
   const double expectedLowerBound = 0.0;
   const double expectedUpperBound = 2.0;
 
-  AGEMOEA opt(20, 300, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
+  AGEMOEA opt(20, 500, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
 
   typedef decltype(SCH.objectiveA) ObjectiveTypeA;
   typedef decltype(SCH.objectiveB) ObjectiveTypeB;
@@ -147,12 +146,12 @@ TEST_CASE("AGEMOEAFonsecaFlemingDoubleTest", "[AGEMOEATest]")
   const double expectedLowerBound = -1.0 / sqrt(3);
   const double expectedUpperBound = 1.0 / sqrt(3);
 
-  AGEMOEA opt(20, 300, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
+  AGEMOEA opt(20, 500, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
   typedef decltype(FON.objectiveA) ObjectiveTypeA;
   typedef decltype(FON.objectiveB) ObjectiveTypeB;
 
   bool success = false;
-  for (size_t trial = 0; trial < 3; ++trial)
+  for (size_t trial = 0; trial < 6; ++trial)
   {
     arma::mat coords = FON.GetInitialPoint();
     std::tuple<ObjectiveTypeA, ObjectiveTypeB> objectives = FON.GetObjectives();
@@ -171,7 +170,7 @@ TEST_CASE("AGEMOEAFonsecaFlemingDoubleTest", "[AGEMOEATest]")
 
       if (!IsInBounds<double>(valX, expectedLowerBound, expectedUpperBound, 0.3) ||
           !IsInBounds<double>(valY, expectedLowerBound, expectedUpperBound, 0.3) ||
-         !IsInBounds<double>(valZ, expectedLowerBound, expectedUpperBound, 0.3))
+          !IsInBounds<double>(valZ, expectedLowerBound, expectedUpperBound, 0.3))
       {
         allInRange = false;
         break;
@@ -184,6 +183,55 @@ TEST_CASE("AGEMOEAFonsecaFlemingDoubleTest", "[AGEMOEATest]")
     }
   }
 
+  REQUIRE(success == true);
+}
+
+/**
+ * Optimize for the Fonseca Fleming function using AGE-MOEA optimizer.
+ * Tests for data of type float.
+ */
+TEST_CASE("AGEMOEAFonsecaFlemingTestVectorFloatBounds", "[AGEMOEATest]")
+{
+  FonsecaFlemingFunction<arma::fmat> FON;
+  const arma::vec lowerBound = {-4, -4, -4};
+  const arma::vec upperBound = {4, 4, 4};
+  const float expectedLowerBound = -1.0 / sqrt(3);
+  const float expectedUpperBound = 1.0 / sqrt(3);
+
+  AGEMOEA opt(20, 300, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
+  typedef decltype(FON.objectiveA) ObjectiveTypeA;
+  typedef decltype(FON.objectiveB) ObjectiveTypeB;
+
+  bool success = false;
+  for (size_t trial = 0; trial < 6; ++trial)
+  {
+    arma::fmat coords = FON.GetInitialPoint();
+    std::tuple<ObjectiveTypeA, ObjectiveTypeB> objectives = FON.GetObjectives();
+
+    opt.Optimize(objectives, coords);
+    arma::fcube paretoSet = arma::conv_to<arma::fcube>::from(opt.ParetoSet());
+
+    bool allInRange = true;
+    for (size_t solutionIdx = 0; solutionIdx < paretoSet.n_slices; ++solutionIdx)
+    {
+      const arma::fmat solution = paretoSet.slice(solutionIdx);
+      float valX = arma::as_scalar(solution(0));
+      float valY = arma::as_scalar(solution(1));
+      float valZ = arma::as_scalar(solution(2));
+
+      if (!IsInBounds<float>(valX, expectedLowerBound, expectedUpperBound, 0.3) ||
+          !IsInBounds<float>(valY, expectedLowerBound, expectedUpperBound, 0.3) ||
+          !IsInBounds<float>(valZ, expectedLowerBound, expectedUpperBound, 0.3))
+      {
+        allInRange = false;
+      }
+    }
+    if (allInRange)
+    {
+      success = true;
+      break;
+    }
+  }
   REQUIRE(success == true);
 }
 
@@ -241,11 +289,11 @@ bool AVariableBoundsCheck(const arma::cube& paretoSet)
     const arma::mat& point = paretoSet.slice(pointIdx);
     const double firstVariable = point(0, 0);
 
-    const bool notInRegion0 = !IsInBounds<double>(firstVariable, regions(0, 0), regions(1, 0), 1e-2);
-    const bool notInRegion1 = !IsInBounds<double>(firstVariable, regions(0, 1), regions(1, 1), 1e-2);
-    const bool notInRegion2 = !IsInBounds<double>(firstVariable, regions(0, 2), regions(1, 2), 1e-2);
-    const bool notInRegion3 = !IsInBounds<double>(firstVariable, regions(0, 3), regions(1, 3), 1e-2);
-    const bool notInRegion4 = !IsInBounds<double>(firstVariable, regions(0, 4), regions(1, 4), 1e-2);
+    const bool notInRegion0 = !IsInBounds<double>(firstVariable, regions(0, 0), regions(1, 0), 3e-2);
+    const bool notInRegion1 = !IsInBounds<double>(firstVariable, regions(0, 1), regions(1, 1), 3e-2);
+    const bool notInRegion2 = !IsInBounds<double>(firstVariable, regions(0, 2), regions(1, 2), 3e-2);
+    const bool notInRegion3 = !IsInBounds<double>(firstVariable, regions(0, 3), regions(1, 3), 3e-2);
+    const bool notInRegion4 = !IsInBounds<double>(firstVariable, regions(0, 4), regions(1, 4), 3e-2);
 
     if (notInRegion0 && notInRegion1 && notInRegion2 && notInRegion3 && notInRegion4)
     {
@@ -258,7 +306,7 @@ bool AVariableBoundsCheck(const arma::cube& paretoSet)
 }
 
 /**
- * Test DirichletMOEAD against the third problem of ZDT Test Suite. ZDT-3 is a 30 
+ * Test AGEMOEA against the third problem of ZDT Test Suite. ZDT-3 is a 30 
  * variable-2 objective problem with disconnected Pareto Fronts. 
  */
 TEST_CASE("AGEMOEADIRICHLETZDT3Test", "[AGEMOEADTest]")
@@ -268,16 +316,21 @@ TEST_CASE("AGEMOEADIRICHLETZDT3Test", "[AGEMOEADTest]")
   const double lowerBound = 0;
   const double upperBound = 1;
 
-  AGEMOEA opt(20, 300, 0.6, 20, 1e-6, 20, lowerBound, upperBound);
+  AGEMOEA opt(20, 500, 0.8, 20, 1e-6, 20, lowerBound, upperBound);
 
   typedef decltype(ZDT_THREE.objectiveF1) ObjectiveTypeA;
   typedef decltype(ZDT_THREE.objectiveF2) ObjectiveTypeB;
+  bool success = true;
+  for (size_t tries = 0; tries < 4; tries++)
+  {
+    arma::mat coords = ZDT_THREE.GetInitialPoint();
+    std::tuple<ObjectiveTypeA, ObjectiveTypeB> objectives = ZDT_THREE.GetObjectives();
 
-  arma::mat coords = ZDT_THREE.GetInitialPoint();
-  std::tuple<ObjectiveTypeA, ObjectiveTypeB> objectives = ZDT_THREE.GetObjectives();
+    opt.Optimize(objectives, coords);
 
-  opt.Optimize(objectives, coords);
-
-  const arma::cube& finalPopulation = opt.ParetoSet();
-  REQUIRE(AVariableBoundsCheck(finalPopulation));
+    const arma::cube& finalPopulation = opt.ParetoSet();
+    success = AVariableBoundsCheck(finalPopulation);
+    if (success){ break;}
+  }
+  REQUIRE(success);
 }

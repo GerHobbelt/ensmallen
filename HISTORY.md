@@ -1,5 +1,14 @@
 ### ensmallen ?.??.?: "???"
 ###### ????-??-??
+ * Fix include statement in `tests/de_test.cpp`
+   ([#419](https://github.com/mlpack/ensmallen/pull/419)).
+
+ * Fix `exactObjective` output for SGD-like optimizers when the number of
+   iterations is an even number of epochs
+   ([#417](https://github.com/mlpack/ensmallen/pull/417)).
+
+ * Increase tolerance in `demon_sgd_test.cpp`
+   ([#420](https://github.com/mlpack/ensmallen/pull/420)).
 
 ### ensmallen 2.22.1: "E-Bike Excitement"
 ###### 2024-12-02

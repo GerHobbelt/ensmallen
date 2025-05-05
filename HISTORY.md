@@ -1,5 +1,8 @@
 ### ensmallen ?.??.?: "???"
 ###### ????-??-??
+
+### ensmallen 2.22.2: "E-Bike Excitement"
+###### 2025-04-30
  * Fix include statement in `tests/de_test.cpp`
    ([#419](https://github.com/mlpack/ensmallen/pull/419)).
 
@@ -9,6 +12,9 @@
 
  * Increase tolerance in `demon_sgd_test.cpp`
    ([#420](https://github.com/mlpack/ensmallen/pull/420)).
+
+ * Set cmake version range to 3.5...4.0
+   ([#422](https://github.com/mlpack/ensmallen/pull/422)).
 
 ### ensmallen 2.22.1: "E-Bike Excitement"
 ###### 2024-12-02

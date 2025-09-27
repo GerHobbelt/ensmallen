@@ -43,7 +43,7 @@ class QHAdam
  public:
   /**
    * Construct the QHAdam optimizer with the given function and parameters.
-   * QHAdam is sensitive to its paramters and hence a good hyper paramater
+   * QHAdam is sensitive to its parameters and hence a good hyper parameter
    * selection is necessary as its default may not fit every case.
    *
    * The maximum number of iterations refers to the maximum number of

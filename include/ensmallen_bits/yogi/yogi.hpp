@@ -47,7 +47,7 @@ class Yogi
  public:
   /**
    * Construct the Yogi optimizer with the given function and parameters.
-   * Yogi is sensitive to its paramters and hence a good hyper paramater
+   * Yogi is sensitive to its parameters and hence a good hyper parameter
    * selection is necessary as its default may not fit every case.
    *
    * The maximum number of iterations refers to the maximum number of

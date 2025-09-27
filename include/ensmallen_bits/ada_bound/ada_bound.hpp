@@ -49,7 +49,7 @@ class AdaBoundType
   /**
    * Construct the AdaBoundType optimizer with the given function and
    * parameters. AdaBoundType is sensitive to its parameters and hence a good
-   * hyper paramater selection is necessary as its default may not fit every
+   * hyper parameter selection is necessary as its default may not fit every
    * case.
    *
    * The maximum number of iterations refers to the maximum number of

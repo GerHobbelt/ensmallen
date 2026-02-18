@@ -1,5 +1,10 @@
-### ensmallen ?.??.?: "???"
-###### ????-??-??
+### ensmallen 3.11.0: "Sunny Day"
+###### 2025-12-15
+ * Refactor `GradientDescent` into
+   `GradientDescentType<UpdatePolicyType, DecayPolicyType>` and
+   add the `DeltaBarDelta` and `MomentumDeltaBarDelta` optimizers
+   ([#440](https://github.com/mlpack/ensmallen/pull/440)).
+
  * Fix an off-by-one bug where the actual number of executed iterations was one
    fewer than the specified `maxIterations`
    ([#443](https://github.com/mlpack/ensmallen/pull/443)).
@@ -47,6 +52,7 @@
     ActiveCMAES<FullSelection, BoundaryBoxConstraint> opt(lambda,
         BoundaryBoxConstraint(lowerBound, upperBound), ...);
     ```
+
  * Add proximal gradient optimizers for L1-constrained and other related
    problems: `FBS`, `FISTA`, and `FASTA`
    ([#427](https://github.com/mlpack/ensmallen/pull/427)).  See the
